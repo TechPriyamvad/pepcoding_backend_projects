@@ -3,16 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon app.js"
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "global": "^4.4.0",
+    "mongoose": "^6.0.6",
     "nodemon": "^2.0.12"
   }
 }

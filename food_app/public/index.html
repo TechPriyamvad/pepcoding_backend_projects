@@ -8,7 +8,22 @@
   </head>
 
   <body>
-    <form>
+    <style>
+      hr {
+        border: 5px solid black;
+      }
+      .login {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .login > button {
+        cursor: pointer;
+      }
+    </style>
+    <h1>Signup functionality</h1>
+    <form class="signup">
       <label>Email</label>
       <input type="email" />
       <label>Name</label>
@@ -16,6 +31,25 @@
       <label>password</label>
       <input type="password" />
       <button>Signup</button>
+    </form>
+    <br />
+    <hr />
+
+    <h1>Login Functionality</h1>
+    <form action="" class="login">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" placeholder="type email" class="login-email" />
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input
+          type="password"
+          placeholder="type password"
+          class="login-password"
+        />
+      </div>
+      <button class="login-button">Login</button>
     </form>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js"
@@ -37,8 +71,24 @@
           password,
           name,
         });
-        console.log(resp.data);
+        // console.log(resp.data);
       });
+
+      let loginBtn = document.querySelector(".login-button");
+      loginBtn.addEventListener("click", loginUser);
+
+      async function loginUser(e) {
+        e.preventDefault();
+        // email
+        let email = document.querySelector(".login-email").value;
+        // password
+        let password = document.querySelector(".login-password").value;
+
+        let resp = await axios.post("/api/auth/login", {
+          email,
+          password,
+        });
+      }
     </script>
   </body>
 </html>

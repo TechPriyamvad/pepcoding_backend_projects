@@ -1,86 +1,91 @@
 // npm init -y
 // npm i express
-// npm i nodemon -g 
+// npm i nodemon -g
 const express = require("express");
-// Server: // route  -> request -> response/file 
+import UserModel from "./model/userModel";
+// Server: // route  -> request -> response/file
 // File system// path -> interact/type -> file /folder
 // server init
 const app = express();
-// post accept -> folder designate  
+// post accept -> folder designate
 
 // function -> route  path
 // frontend -> req -> /
 
 // getting data from server
 // giving data to server
-// crud app 
+// crud app
 // create
 // .form fill
-app.use(express.static('public'))
+app.use(express.static("public"));
 app.use(express.json());
 const userRouter = express.Router();
 const authRouter = express.Router();
 // /api/user/:id
-app.use('/api/user', userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 userRouter
-    .route("/")
-    .get(getUser)
-    .post(createUser)
-    .patch(updateUser)
-    .delete(deletUser);
-userRouter
-    .route("/:id")
-    .get(getUserById);
-authRouter
-    .post("/signup", signupUser)
-    .post("/login", loginUser);
-// database 
-let user = [];
+  .route("/")
+  .get(getUser)
+  .post(createUser)
+  .patch(updateUser)
+  .delete(deletUser);
+userRouter.route("/:id").get(getUserById);
+authRouter.post("/signup", setCreatedAt, signupUser).post("/login", loginUser);
+
+// database
+
+function setCreatedAt(req, res, next) {
+  req.body.createdAt = new Date().toISOString();
+  next();
+}
 function signupUser(req, res) {
+  try {
     //email,user name ,password
-    let { email, password, name } = req.body;
-    console.log("user", req.body);
-    user.push({
-        email, name, password
-    })
+    let userObj = req.body;
+    console.log("userObj", req.body);
+    let user = await UserModel.create(userObj);
+    console.log("user", user);
     res.status(200).json({
-        message: "user created",
-        createdUser: req.body
-    })
+      message: "user created",
+      createdUser: user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 function createUser(req, res) {
-    console.log("req.data", req.body);
-    user = req.body;
-    res.status(200).send("data recieved and user added ");
+  console.log("req.data", req.body);
+  user = req.body;
+  res.status(200).send("data recieved and user added ");
 }
 function getUser(req, res) {
-    console.log("users")
-    res.json(user);
-    // for sending key value pair
+  console.log("users");
+  res.json(user);
+  // for sending key value pair
 }
 function updateUser(req, res) {
-    let obj = req.body;
-    for (let key in obj) {
-        user[key] = obj[key];
-    }
-    res.status(200).json(user);
+  let obj = req.body;
+  for (let key in obj) {
+    user[key] = obj[key];
+  }
+  res.status(200).json(user);
 }
 function deletUser(req, res) {
-    user = {}
-    res.status(200).json(user);
+  user = {};
+  res.status(200).json(user);
 }
 function getUserById(req, res) {
-    console.log(req.params);
-    res.status(200).send("Hello");
+  console.log(req.params);
+  res.status(200).send("Hello");
 }
 
 function loginUser(req, res) {
-
+  // let {email,password}  = req.body;
+  res.status(200).json(req.body);
 }
 
-// mounting in express 
-
+// mounting in express
 
 // app.post("/api/user", getUser);
 // // get
@@ -89,11 +94,11 @@ function loginUser(req, res) {
 // app.patch("/api/user", updateUser);
 // //delete
 // app.delete("/api/user", deletUser);
-//template routes 
+//template routes
 // app.get("api/user/:id", getUserById);
 
 //localhost:8080 ??
 app.listen(8080, function () {
-    console.log("server started");
-})
+  console.log("server started");
+});
 // / port, ip,localhost
